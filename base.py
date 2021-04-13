@@ -17,6 +17,19 @@ D002 | 01 | / | D001 , 0010 ;
 usage: 0000 | 00 | C005 | 0100 , 0010 ;
 '''
 
+def splitline(text):
+    idcode, indent, op, ints = text.split(' | ')
+    try:
+        i1, i2 = ints.split(', ')
+    except: 
+        i1, i2 = ints.split(',')
+    i2, endp = i2.split(' ')
+    return idcode, indent, op, i1, i2, endp
+def newline(text):
+    idcode, indent, op, i1, i2, endp = splitline(text)
+    #PRO GAMER MOVE
+    globals()[idcode] = line(text)
+
 def DecToBin(num):
     return bin(num).replace("0b", "")
 def BinToDec(num):
@@ -24,13 +37,20 @@ def BinToDec(num):
 
 cattr = ('==', '!=', '>=', '>', '<=', '<')
 
-class system:
+class System:
     def __repr__(self):
         return '< System 0000 >'
     def output(self,text, format):
+        idcode, indent, op, i1, i2, endp = splitline(text)
         if format == 'DEC':
-            print()
+            
+        elif format == 'BIN':
+        elif format == 'HEX':
+        elif format == 'BOOL':
+        else:
+            raise Exception('Unknown format under self.format')
 
+    
 class line:
     def stateofval(self):
         s = True
@@ -40,7 +60,7 @@ class line:
             for i in range(len(self.val)):
                 if s == True:
                     if self.val[i] in '10':
-                        s =  True
+                        s = True
                     else:
                         s = False
                     self.format = 'BIN'
@@ -67,7 +87,6 @@ class line:
         self.i2, self.endp = self.i2.split(' ')
 
         #return to decimal state for calulations
-        #may not work: try to use i1 variable to call the class that was found
         try:
             self.i1d = BinToDec(self.i1)
         except:
@@ -78,7 +97,6 @@ class line:
             self.i2d = BinToDec(self.i2)
         except:
             i2 = self.i2
-            print('w')
             self.i2d = i2.val
 
 
@@ -95,8 +113,6 @@ class line:
             else:
                 
                 #if statement definition 
-                #super annoying eval() didn't work so I had to write all the statements out
-                #find a way to limit this to one nested statement
                 if self.op == '==':
                     if (int(self.i1d) == int(self.i2d)) == True:
                         self.val = True
@@ -127,4 +143,20 @@ class line:
                         self.val = True
                     else:
                         self.val = False
+        else:
+            #basic operations
+            #self.val = eval(self.i1d, self.op, self.i2d) DID NOT WORK LOOK INTO ERROR
+            if self.op == '+':
+                self.val = self.i1d + self.i2d
+            elif self.op == '-':
+                self.val = self.i1d - self.i2d
+            elif self.op == '*':
+                self.val = self.i1d * self.i2d
+            elif self.op == '/':
+                self.val = self.i1d / self.i2d
+            self.val = DecToBin(self.val)
+            
         self.stateofval()
+    
+newline('C001 | 00 | + | 0100, 0100 ;')
+print(C001.format)
