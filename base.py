@@ -113,7 +113,45 @@ class System:
 
         except:
             objectformat = formatcheck(i1)
-            #copy and paste try: format but change i1.val to i1
+            if format == 'DEC':
+                if objectformat == 'BIN':
+                    output = BinToDec(i1)
+                elif objectformat == 'DEC':
+                    output = i1
+                elif objectformat == 'HEX':
+                    output = HexToDec(i1)
+                elif objectformat == 'BOOL':
+                    x = i1
+                    if x == True:
+                        output = 1
+                    elif x == False:
+                        output = 0
+            elif format == 'BIN':
+                if objectformat == 'BIN':
+                    output = i1
+                elif objectformat == 'DEC':
+                    output = DecToBin(i1 )
+                elif objectformat == 'HEX':
+                    output = HexToBin(i1)
+                elif objectformat == 'BOOL':
+                    raise Exception(booltointerror)
+            elif format == 'HEX':
+                if objectformat == 'BIN':
+                    output = BinToHex(i1)
+                elif objectformat == 'DEC':
+                    output = DecToHex(i1 )
+                elif objectformat == 'HEX':
+                    output = (i1)
+                elif objectformat == 'BOOL':
+                    raise Exception(booltointerror)
+            elif format == 'BOOL':
+                if objectformat == 'BOOL':
+                    output = i1
+                else:
+                    raise Exception(booltointerror)
+            else:
+                raise Exception('Unknown format under self.format')
+            print(output)
         
 tiaga = System()
 
@@ -316,8 +354,6 @@ class line:
         
         
 
-newline('C001 | 00 | + | 0100, 0100 ;')
-newline('0000 | 00 | # | 0101, DEC ;')
 
 
 
