@@ -1,10 +1,26 @@
+#modules
+import tiagasockets
+
+
 # data types: BOOL, DEC, BIN, HEX, OBJ
 
-#C001 | 00 | * | 0100, 0101 ;
-#example stores C001 as (20, binary)
+'''
+DONE:
+simple calculations
+if statements
+variables
+system built-in function(print)
 
-#find a way to answer if statements with following line
+'''
+'''
+TO DO:
+functions
+make it more efficent
+create modules folder and import functionality
 
+
+'''
+#known errors: 0000 | 00 | # | 0x12, DEC ; stateofints cant read hex since its a string
 #aleternate examples that still need to be implimented
 '''
 function to find area of triangle
@@ -19,7 +35,7 @@ booltointerror = 'Can not convert numeric value to boolean'
 
 cattr = ('==', '!=', '>=', '>', '<=', '<')
 datatypes = ('BOOL','DEC', 'BIN', 'HEX', 'OBJ')
-
+bypassstateofints = ['@->']
 def formatcheck(num):
     s = True
     if type(num) == bool:
@@ -152,7 +168,13 @@ class System:
             else:
                 raise Exception('Unknown format under self.format')
             print(output)
-        
+    def connection(self, ip, port):
+        self.port = HexToDec(port)
+        self.SocketTuple = (ip,self.port)
+        tiagasockets.connect(self.SocketTuple)
+
+
+       
 tiaga = System()
 
 class line:
@@ -276,16 +298,21 @@ class line:
             try:
                 #variable that will never be used again
                 xtrf = int(self.i2)
-                self.stateofints()
+                if self.op not in bypassstateofints:
+                    self.stateofints()
             except:
                 plh = self.i2
                 self.i2 = 1010
-                self.stateofints()
+                if self.op not in bypassstateofints:
+                    self.stateofints()
                 self.i2 = plh
                 self.i2d = 0
-
-        #next step is to create a function definition 
-        #also make sure variables can be passed for i1 and i2
+        if self.idcode == '0000':
+                #print function
+                if self.op == '#':
+                    tiaga.output(self.text, self.i2)
+                elif self.op == '@->':
+                    tiaga.connection(self.i1, self.i2)
         if ':' in self.endp:
             if self.op != '!' and self.op not in cattr:
                 if self.indent != '00':
@@ -329,7 +356,6 @@ class line:
                         self.val = False
         else:
             #basic operations
-            #self.val = eval(self.i1d, self.op, self.i2d) DID NOT WORK LOOK INTO ERROR
             if self.op == '+':
                 self.val = self.i1d + self.i2d
             elif self.op == '-':
@@ -338,7 +364,7 @@ class line:
                 self.val = self.i1d * self.i2d
             elif self.op == '/':
                 self.val = self.i1d / self.i2d
-            #system bypass
+            #system exceptions
             if self.idcode != '0000':
                 self.val = DecToBin(self.val)
                 self.stateofval()
@@ -347,13 +373,5 @@ class line:
                 self.format = 'OBJ'
 
             #triggers system call
-            if self.idcode == '0000':
-                #print function
-                if self.op == '#':
-                    tiaga.output(self.text, self.i2)
-        
-        
-
-
-
-
+            
+#example usage newline("C001 | 00 | * | 0101, 0110 ;")
